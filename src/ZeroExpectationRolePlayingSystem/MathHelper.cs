@@ -6,36 +6,6 @@ namespace ZeroExpectationRolePlayingSystem
     public class MathHelper
     {
         public const double Sqrt2 = 1.4142135623730950488016887242097;
-        //private double? _generatedValue;
-
-        public static readonly Random DefaultRandomGenerator = new Random();
-
-        public static double BoxMuller()
-        {
-            return BoxMuller(DefaultRandomGenerator);
-        }
-
-        public static double BoxMuller(Random random)
-        {
-            double u1, u2;
-
-            //if (_generatedValue.HasValue)
-            //{
-            //    var value = _generatedValue.Value;
-            //    _generatedValue = null;
-            //    return value;
-            //}
-
-            do
-            {
-                u1 = random.NextDouble();
-                u2 = 6.283185307179586476925286766559 * random.NextDouble();
-            } while (u1 <= double.Epsilon);
-
-            var u1Log = Math.Sqrt(-2.0 * Math.Log(u1));
-            //_generatedValue = u1Log * Math.Sin(u2);
-            return u1Log * Math.Cos(u2);
-        }
 
         public static double ArgumentFromProbability(double probability)
         {

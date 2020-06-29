@@ -78,6 +78,7 @@ namespace ZeroExpectationRolePlayingSystem
         {
             var rpg = new RolePlayingSystem();
             Assert.AreEqual(expectedResult, rpg.IsSuccess(roll, skillCheck));
+            Assert.IsFalse(rpg.IsCriticalFailure(roll, skillCheck));
         }
     }
 }

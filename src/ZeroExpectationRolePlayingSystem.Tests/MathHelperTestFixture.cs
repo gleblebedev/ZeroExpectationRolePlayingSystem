@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace ZeroExpectationRolePlayingSystem
 {
@@ -8,33 +6,18 @@ namespace ZeroExpectationRolePlayingSystem
     public class MathHelperTestFixture
     {
         [Test]
+        [TestCase(0.001)]
         [TestCase(0.1)]
         [TestCase(0.4)]
         [TestCase(0.5)]
         [TestCase(0.6)]
         [TestCase(0.9)]
+        [TestCase(0.999)]
         public void ArgumentFromProbability(double probability)
         {
             var argumentFromProbability = MathHelper.ArgumentFromProbability(probability);
             var p = MathHelper.SuccessProbability(argumentFromProbability);
             Assert.AreEqual(probability, p, 0.001);
-        }
-
-        [Test]
-        [TestCase(0.1)]
-        [TestCase(0.2)]
-        [TestCase(0.3)]
-        [TestCase(0.9)]
-        [TestCase(1.0)]
-        public void BoxMuller(double percentage)
-        {
-            var rnd = new Random(0);
-            var values = Enumerable.Range(0, 10000).Select(_ => MathHelper.BoxMuller(rnd)).OrderBy(_ => _).ToList();
-            var samples = (double) values.Count;
-            var sampleIndex = (int) ((values.Count - 1) * percentage);
-            var sample = values[sampleIndex];
-
-            Assert.AreEqual(MathHelper.SuccessProbability(sample), sampleIndex / samples, 0.01);
         }
 
         [Test]
