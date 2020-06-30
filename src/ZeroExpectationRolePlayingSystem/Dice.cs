@@ -13,7 +13,7 @@ namespace ZeroExpectationRolePlayingSystem
             _randomNumberGenerator = randomNumberGenerator;
         }
 
-        public double Roll()
+        public DiceRoll Roll()
         {
             double u1, u2;
 
