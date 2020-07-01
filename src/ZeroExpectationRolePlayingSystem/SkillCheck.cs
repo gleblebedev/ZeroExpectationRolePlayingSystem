@@ -29,6 +29,14 @@ namespace ZeroExpectationRolePlayingSystem
             return _value.ToString(CultureInfo.InvariantCulture);
         }
 
+        public static SkillCheck operator+(SkillCheck check, SkillCheckOffset offset)
+        {
+            return new SkillCheck(check._value + (double)offset);
+        }
+        public static SkillCheck operator-(SkillCheck check, SkillCheckOffset offset)
+        {
+            return new SkillCheck(check._value - (double)offset);
+        }
         public double SuccessProbability
         {
             get { return MathHelper.SuccessProbability(_value); }

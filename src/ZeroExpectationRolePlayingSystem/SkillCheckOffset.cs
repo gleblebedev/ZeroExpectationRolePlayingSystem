@@ -23,7 +23,18 @@ namespace ZeroExpectationRolePlayingSystem
         {
             return new SkillCheckOffset((double)roll);
         }
-
+        public static SkillCheckOffset operator +(SkillCheckOffset offsetX, SkillCheckOffset offsetY)
+        {
+            return new SkillCheckOffset(offsetX._value + offsetY._value);
+        }
+        public static SkillCheckOffset operator -(SkillCheckOffset offsetX, SkillCheckOffset offsetY)
+        {
+            return new SkillCheckOffset(offsetX._value -offsetY._value);
+        }
+        public static SkillCheckOffset operator -(SkillCheckOffset offset)
+        {
+            return new SkillCheckOffset(-offset._value);
+        }
         public override string ToString()
         {
             return _value.ToString(CultureInfo.InvariantCulture);
