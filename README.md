@@ -138,15 +138,46 @@ Let's look at a roleplaying system with 3.0 as a threshold value for a critical 
 | 1.5 | 6.681% | 1 of 14 | 93.319% | 100 of 107  | 0.000% | 1 of 294319 |
 | 2 | 15.866% | 1 of 6 | 97.725% | 100 of 102  | 0.000% | 1 of 3488555 |
 
+### Typical skill level values
+
+| Job Title | Skill Level |
+|--|--|
+| Default | -1 |
+| Complete beginner | -0.66 |
+| Beginner | -0.33 |
+| Amateur | 0.33 |
+| Competent | 0.8 |
+| Very competent | 1.33 |
+| Specialist | 1.66 |
+| Respected Specialist | 2 |
+
+### Typical difficulty levels
+
+| Difficulty | Difficulty Level |
+|--|--|
+| Automatic | -3.0  |
+| Trivial | -2.5 |
+| Very Easy | -2.0 |
+| Easy | -1.4 |
+| Very Favorable | -0.66 |
+| Favorable | -0.33 |
+| Average | 0.0 |
+| Unfavorable | 0.33 |
+| Very Unfavorable | 0.8 |
+| Hard | 1.4 |
+| Very Hard | 2.0 |
+| Dangerous | 2.5 |
+| Impossible | 3.0 |
+
 Let’s analyze the skill check for the amateur lock picker picking a hard lock.
 
 #### Skill Level (**S**):
 
 - The amateur lock picker has a skill level of (S = 0.45).
-- Skill level of 0.45 is equivalent of 67.3% chance of success on a lock with difficulty D = 0.0, or roughly 10 of 14 successful rolls.
+- Skill level of 0.45 is equivalent of 67.3% chance of success on a lock with average difficulty D = 0.0, or roughly 10 of 14 successful rolls.
 
 #### Difficulty of the Lock (**D**):
-- The lock’s difficulty is (D = 0.7).
+- The lock’s difficulty is close to very unfavorable (D = 0.7).
 - A higher difficulty value indicates a tougher lock to pick. Difficulty equal to 0.7 gives a player with skill level equal to 0.0 a chance to open the lock 24.2% success rate, or roughly 1 of 4 attempts.
 
 #### Dice roll and outcome.

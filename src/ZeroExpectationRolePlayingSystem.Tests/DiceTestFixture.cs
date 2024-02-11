@@ -22,7 +22,7 @@ namespace ZeroExpectationRolePlayingSystem
             var sampleIndex = (int)((values.Count - 1) * percentage);
             var sample = values[sampleIndex];
 
-            Assert.AreEqual(MathHelper.SuccessProbability(sample), sampleIndex / samples, 0.01);
+            Assert.AreEqual(dice.EvaluateProbability(sample), sampleIndex / samples, 0.01);
         }
 
         [Test]
@@ -42,7 +42,45 @@ namespace ZeroExpectationRolePlayingSystem
             var sampleIndex = (int)((values.Count - 1) * percentage);
             var sample = values[sampleIndex];
 
-            Assert.AreEqual(MathHelper.SuccessProbability(sample, mu, sigma), sampleIndex / samples, 0.01);
+            Assert.AreEqual(dice.EvaluateProbability(sample), sampleIndex / samples, 0.01);
+        }
+
+        [Test]
+        public void ValidateAddDice()
+        {
+            var diceX = new Dice(new Random(0).NextDouble, 2.0, 3.0);
+            var diceY = new Dice(new Random(1).NextDouble, 1.0, 1.0);
+
+            var diceZ = diceX + diceY;
+
+            var values = Enumerable.Range(0, 10000).Select(_ => diceX.Roll() + diceY.Roll()).OrderBy(_ => _).ToList();
+            var samples = (double)values.Count;
+            for (double percentage = 0.1; percentage < 1.0; percentage += 0.1)
+            {
+                var sampleIndex = (int)((values.Count - 1) * percentage);
+                var sample = values[sampleIndex];
+
+                Assert.AreEqual(diceZ.EvaluateProbability(sample), sampleIndex / samples, 0.01);
+            }
+        }
+
+        [Test]
+        public void ValidateSubtractDice()
+        {
+            var diceX = new Dice(new Random(0).NextDouble, 2.0, 3.0);
+            var diceY = new Dice(new Random(1).NextDouble, 1.0, 1.0);
+
+            var diceZ = diceX - diceY;
+
+            var values = Enumerable.Range(0, 10000).Select(_ => diceX.Roll() - diceY.Roll()).OrderBy(_ => _).ToList();
+            var samples = (double)values.Count;
+            for (double percentage = 0.1; percentage < 1.0; percentage += 0.1)
+            {
+                var sampleIndex = (int)((values.Count - 1) * percentage);
+                var sample = values[sampleIndex];
+
+                Assert.AreEqual(diceZ.EvaluateProbability(sample), sampleIndex / samples, 0.01);
+            }
         }
     }
 }

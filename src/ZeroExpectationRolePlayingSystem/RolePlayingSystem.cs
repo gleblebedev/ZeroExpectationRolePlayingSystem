@@ -50,17 +50,17 @@ namespace ZeroExpectationRolePlayingSystem
             return this;
         }
 
-        public bool IsCriticalSuccess(DiceRoll roll, double check)
+        public bool IsCriticalSuccess(double roll, double check)
         {
             return roll - check < _criticalSuccess;
         }
 
-        public bool IsCriticalFailure(DiceRoll roll, double check)
+        public bool IsCriticalFailure(double roll, double check)
         {
             return roll - check > _criticalFailure;
         }
 
-        public bool IsSuccess(DiceRoll roll, double check)
+        public bool IsSuccess(double roll, double check)
         {
             return roll - check <= 0;
         }

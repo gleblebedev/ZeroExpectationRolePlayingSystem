@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace ZeroExpectationRolePlayingSystem
 {
@@ -45,7 +46,7 @@ namespace ZeroExpectationRolePlayingSystem
         /// Random number is generated via Box–Muller transform.
         /// </summary>
         /// <returns>Dice roll result.</returns>
-        public DiceRoll Roll()
+        public double Roll()
         {
             double u1, u2;
 
@@ -72,9 +73,19 @@ namespace ZeroExpectationRolePlayingSystem
         /// </summary>
         /// <param name="roll">Dice roll.</param>
         /// <returns>Probability in range of [0..1]</returns>
-        public double EvaluateProbability(DiceRoll roll)
+        public double EvaluateProbability(double roll)
         {
-            return MathHelper.SuccessProbability(roll.Value);
+            return MathHelper.SuccessProbability(roll, _mean, _stdDev);
+        }
+
+        public static Dice operator +(Dice left, Dice right)
+        {
+            return new Dice(left._randomNumberGenerator, left._mean + right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
+        }
+
+        public static Dice operator -(Dice left, Dice right)
+        {
+            return new Dice(left._randomNumberGenerator, left._mean - right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
         }
     }
 }
