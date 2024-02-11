@@ -1,5 +1,4 @@
 ﻿using System;
-using MathNet.Numerics;
 
 namespace ZeroExpectationRolePlayingSystem
 {
@@ -17,9 +16,10 @@ namespace ZeroExpectationRolePlayingSystem
             return -1.4142135623730950488016887242097 * SpecialFunctions.ErfcInv(2.0 * probability);
         }
 
-        public static double SuccessProbability(double x)
+        public static double SuccessProbability(double x, double mean = 0.0, double stdDev = 1.0)
         {
-            return (SpecialFunctions.Erf(x * 0.70710678118654752440084436210485) + 1.0) * 0.5;
+            double z = (x - mean) / stdDev;
+            return (SpecialFunctions.Erf(z * 0.70710678118654752440084436210485) + 1.0) * 0.5;
 
             //Via error function
             //return (ErrorFunction(x * 0.70710678118654752440084436210485) + 1.0) / 2.0;
