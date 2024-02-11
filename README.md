@@ -7,9 +7,11 @@ In a Computer Role-Playing Game (CRPG), both normal distribution random generati
 
 - It is easier to calculate probabilities, percentiles, and cumulative distribution functions. In contrast, dice rolls involve discrete probabilities.
 
-- CRPG designers can adjust the mean and standard deviation of the normal distribution to **fine-tune game balance**. For example, adjusting the damage dealt by weapons, critical hit chances, or skill checks. Dice rolls, while iconic, may be less flexible for precise balancing.
+- CRPG designers can adjust the mean and standard deviation of the normal distribution to **fine-tune game balance**. For example, adjusting the damage dealt by weapons, critical hit chances, or skill checks. Dice rolls, while iconic, may be less flexible for precise balancing. Dice rolls are inherently discrete. A six-sided die gives you six possible outcomes.
 
 - Normal distribution outcomes feel more continuous and natural. Critical hits, misses, and other events can be narratively explained based on statistical probabilities.
+
+- Continuous skill levels enhance storytelling. Instead of saying, "You rolled a 15; you succeed," we can say, "Your finely honed lockpicking skill allows you to deftly manipulate the tumblers." This adds flavor and depth to the narrative.
 
 # What is Normal Distribution?
 
@@ -72,7 +74,7 @@ Simplified normal distribution is used for skill checks and the full formula is 
 
 # Normal Distributed Dice
 
-In the following text let's assume that dice we roll is a magical device that produce a random value with normal distribution. The result of such dice roll could be any number and isn't descrir
+In the following text let's assume that dice we roll is a magical device that produce a random value with normal distribution. The result of such dice roll could be any number and isn't discrete as with real world dice.
 
 # Dice rolls and Skill checks
 
