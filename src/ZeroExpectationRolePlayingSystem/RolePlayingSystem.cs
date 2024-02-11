@@ -4,14 +4,31 @@ namespace ZeroExpectationRolePlayingSystem
 {
     public class RolePlayingSystem
     {
+        /// <summary>
+        /// Threshold for critical success.
+        /// </summary>
         private double _criticalSuccess = double.MinValue;
+
+        /// <summary>
+        /// Threshold for critical failure.
+        /// </summary>
         private double _criticalFailure = double.MaxValue;
 
+        /// <summary>
+        /// Set critical success probability.
+        /// </summary>
+        /// <param name="probability">Expected probability.</param>
+        /// <returns>This role playing system with modified value.</returns>
         public RolePlayingSystem WithCriticalSuccessProbability(double probability)
         {
             return WithCriticalSuccessOffset(MathHelper.ArgumentFromProbability(probability));
         }
 
+        /// <summary>
+        /// Set critical success threshold value.
+        /// </summary>
+        /// <param name="offset">Threshold value. Every result less of the value is considered as a critical failure.</param>
+        /// <returns>This role playing system with modified value.</returns>
         public RolePlayingSystem WithCriticalSuccessOffset(double offset)
         {
             if (offset >= 0)
@@ -33,17 +50,17 @@ namespace ZeroExpectationRolePlayingSystem
             return this;
         }
 
-        public bool IsCriticalSuccess(double roll, double check)
+        public bool IsCriticalSuccess(DiceRoll roll, double check)
         {
             return roll - check < _criticalSuccess;
         }
 
-        public bool IsCriticalFailure(double roll, double check)
+        public bool IsCriticalFailure(DiceRoll roll, double check)
         {
             return roll - check > _criticalFailure;
         }
 
-        public bool IsSuccess(double roll, double check)
+        public bool IsSuccess(DiceRoll roll, double check)
         {
             return roll - check <= 0;
         }
@@ -55,7 +72,7 @@ namespace ZeroExpectationRolePlayingSystem
 
         public double GetCriticalSuccessProbability(double check)
         {
-            return MathHelper.SuccessProbability(check+ _criticalSuccess);
+            return MathHelper.SuccessProbability(check + _criticalSuccess);
         }
 
         public double GetCriticalFailureProbability(double check)

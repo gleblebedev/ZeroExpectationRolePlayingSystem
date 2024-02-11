@@ -58,6 +58,93 @@ The standard normal distribution is a special case where (μ = 0) and (σ = 1). 
 
 ![normal_distribution](docs/images/normal_distribution_0_1.png)
 
+Simplified normal distribution is used for skill checks and the full formula is used to calculate outcome, like amount of damage.
+
 # Dice rolls and Skill checks
 
-TBC
+Let’s break down how the RPG skill check works step by step:
+
+### Random Value Generation:
+
+- A new random value is generated. This value represents the inherent randomness and unpredictability of the situation.
+- Let’s denote this random value as (**R**).
+
+### Skill Level:
+
+- Each character or player has a skill level associated with the specific skill being tested (e.g., lockpicking, swordsmanship, magic, etc.).
+- This skill level reflects their proficiency or expertise in that area.
+Let’s denote the skill level as (**S**).
+
+### Difficulty of the Task:
+
+- The difficulty of the task or challenge is also considered.
+- This difficulty factor represents how hard it is to accomplish the task.
+- Let’s denote the difficulty as (**D**).
+
+### Calculating the Resulting Value:
+
+We calculate the resulting value by subtracting the skill level from the random value and then adding the difficulty: ```Check = R - S + D```
+
+### Success or Failure:
+
+If the resulting value is less than or equal to zero ((R - S + D \leq 0)), the skill check is a success. The character successfully accomplishes the task.
+
+Otherwise, if the resulting value is greater than zero ((R - S + D > 0)), the skill check fails. The character does not succeed in the task.
+
+In summary, the skill check combines randomness, the character’s skill level, and the difficulty of the task to determine whether the character succeeds or fails. It adds an element of chance and strategy to the game, making it more engaging for players.
+
+### Critical success or failure:
+
+In a threshold-based system, we define specific thresholds for success and failure.
+For example:
+
+If the resulting value ((R - S + D)) is below a certain threshold (e.g., 0), it’s a regular success.
+
+If the resulting value is above another threshold (e.g., -3.0), it’s a critical success. Remember, negative values are treated as success. The threshold -3.0 is equivalent to 0.135% success rate or once in 741 dice rolls.
+
+Conversely, if the resulting value is less than a failure threshold (e.g., 3.0), it’s a critical failure.
+
+Critical successes and failures occur when the result significantly deviates from the norm. These thresholds can be adjusted based on game balance and desired gameplay.
+
+### Sample dice rolls.
+
+Let's look at a roleplaying system with 3.0 as a threshold value for a critical values.
+
+| S-D | Cirtical Success | 🎲 | Success | 🎲 | Critical Failure  | 🎲 |
+|--|--|--|--|--|--|--|
+| -2 | 0.000% | 1 of 3488555 | 2.275% | 1 of 43  | 15.866% | 1 of 6 |
+| -1.5 | 0.000% | 1 of 294319 | 6.681% | 1 of 14  | 6.681% | 1 of 14 |
+| -1 | 0.003% | 1 of 31574 | 15.866% | 1 of 6  | 2.275% | 1 of 43 |
+| -0.5 | 0.023% | 1 of 4298 | 30.854% | 1 of 3  | 0.621% | 1 of 161 |
+| 0 | 0.135% | 1 of 740 | 50.000% | 1 of 2  | 0.135% | 1 of 740 |
+| 0.5 | 0.621% | 1 of 161 | 69.146% | 10 of 14  | 0.023% | 1 of 4298 |
+| 1 | 2.275% | 1 of 43 | 84.134% | 10 of 11  | 0.003% | 1 of 31574 |
+| 1.5 | 6.681% | 1 of 14 | 93.319% | 100 of 107  | 0.000% | 1 of 294319 |
+| 2 | 15.866% | 1 of 6 | 97.725% | 100 of 102  | 0.000% | 1 of 3488555 |
+
+Let’s analyze the skill check for the amateur lock picker picking a hard lock.
+
+#### Skill Level (**S**):
+
+- The amateur lock picker has a skill level of (S = 0.45).
+- Skill level of 0.45 is equivalent of 67.3% chance of success on a lock with difficulty D = 0.0, or roughly 10 of 14 successful rolls.
+
+#### Difficulty of the Lock (**D**):
+- The lock’s difficulty is (D = 0.7).
+- A higher difficulty value indicates a tougher lock to pick. Difficulty equal to 0.7 gives a player with skill level equal to 0.0 a chance to open the lock 24.2% success rate, or roughly 1 of 4 attempts.
+
+#### Dice roll and outcome.
+
+A new random value is generated. Let’s assume it’s **R** = 0.5.
+
+We calculate the resulting value: [ Check = R - S + D = 0.5 - 0.45 + 0.7 = 0.75 ]
+
+The resulting value of 0.75 is greater than zero. In this case, the skill check fails because the lock picker couldn’t successfully open the lock.
+
+The amateur’s lack of skill combined with the moderate difficulty of the lock resulted in failure.
+
+For [ **S-D** = 0.45 - 0.7 = -0.25 ] success rates are
+
+| S-D | Cirtical Success | 🎲 | Success | 🎲 | Critical Failure  | 🎲 |
+|--|--|--|--|--|--|--|
+| -0.25 | 0.058% | 1 of 1733 | 40.129% | 1 of 2  | 0.298% | 1 of 335 |

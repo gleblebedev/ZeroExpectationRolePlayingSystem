@@ -20,12 +20,6 @@ namespace ZeroExpectationRolePlayingSystem
         {
             double z = (x - mean) / stdDev;
             return (SpecialFunctions.Erf(z * 0.70710678118654752440084436210485) + 1.0) * 0.5;
-
-            //Via error function
-            //return (ErrorFunction(x * 0.70710678118654752440084436210485) + 1.0) / 2.0;
-
-            //Via complimentary error function:
-            //return (1.0 - ErrorFunction(- x * 0.70710678118654752440084436210485)) / 2.0;
         }
 
         public static double ErrorFunction(double x)
