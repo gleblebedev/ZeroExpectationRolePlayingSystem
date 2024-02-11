@@ -1,6 +1,16 @@
 # Zero Expectation Role Playing System
 Role playing system based on normal (Gaussian) distribution with zero mean (zero expectation) and unit sigma.
 
+In a Computer Role-Playing Game (CRPG), both normal distribution random generation and dice rolls serve as methods for introducing randomness and uncertainty. Let’s explore the advantages of using normal distribution random generation over traditional dice rolls.
+
+- The normal distribution (also known as the Gaussian distribution) is symmetric and bell-shaped. This shape is useful because it can **describe many real-world populations**.
+
+- It is easier to calculate probabilities, percentiles, and cumulative distribution functions. In contrast, dice rolls involve discrete probabilities.
+
+- CRPG designers can adjust the mean and standard deviation of the normal distribution to **fine-tune game balance**. For example, adjusting the damage dealt by weapons, critical hit chances, or skill checks. Dice rolls, while iconic, may be less flexible for precise balancing.
+
+- Normal distribution outcomes feel more continuous and natural. Critical hits, misses, and other events can be narratively explained based on statistical probabilities.
+
 # What is Normal Distribution?
 
 **TL;DR**: Imagine you’re rolling a regular six-sided die. Each number (1 to 6) has an equal chance of showing up. The total you get from rolling two dice (like 2, 3, 4, ..., up to 12) follows a pattern similar to the bell curve. Common totals (like 7) are more probable, while extreme outcomes (like 2 or 12) are rare. In real-world scenarios, data often follows a bell curve. Most values cluster around the **mean**, and extreme values are less common. The **standard deviation** controls how spread out the data is.
@@ -59,6 +69,10 @@ The standard normal distribution is a special case where (μ = 0) and (σ = 1). 
 ![normal_distribution](docs/images/normal_distribution_0_1.png)
 
 Simplified normal distribution is used for skill checks and the full formula is used to calculate outcome, like amount of damage.
+
+# Normal Distributed Dice
+
+In the following text let's assume that dice we roll is a magical device that produce a random value with normal distribution. The result of such dice roll could be any number and isn't descrir
 
 # Dice rolls and Skill checks
 
@@ -143,8 +157,36 @@ The resulting value of 0.75 is greater than zero. In this case, the skill check 
 
 The amateur’s lack of skill combined with the moderate difficulty of the lock resulted in failure.
 
-For [ **S-D** = 0.45 - 0.7 = -0.25 ] success rates are
+For [ **S-D** = 0.45 - 0.7 = -0.25 ] chances of a particular outcome are:
 
 | S-D | Cirtical Success | 🎲 | Success | 🎲 | Critical Failure  | 🎲 |
 |--|--|--|--|--|--|--|
 | -0.25 | 0.058% | 1 of 1733 | 40.129% | 1 of 2  | 0.298% | 1 of 335 |
+
+# Attack, Defense and dice rolls
+
+Let’s explore how to calculate damage in hit points when the attack and defense parameters follow random distributions.
+
+#### Attack Parameter (🗡️ AP):
+
+The attack parameter represents the effectiveness of the weapon. It follows a normal distribution with a mean (expected value) denoted as **μ** and a standard deviation denoted as **σ**.
+
+#### Defense Parameter (🛡️ AP):
+
+The defense parameter of the attacked creature represents its ability to withstand damage. It also follows a normal distribution with a mean **μ** and a standard deviation **σ**.
+
+#### Calculating Damage (💥):
+
+To calculate the damage inflicted by the attack, we consider the difference between random numbers generated from attack and the defense parameters. If the resulting value is negative, we set the damage to zero (no negative damage). Otherwise, the damage is the positive difference between random numbers.
+
+To our advantage the result probability of difference between two normally distributed random values also follows normal distribution. This means you can predict probability of any damage value.
+
+The mean of the difference between two random variables is simply the difference of their means: **μ💥** = **μ🗡️** - **μ🛡️**
+
+The standard deviation of the difference is the square root of the variance: **σ💥** = sqrt(**σ🗡️**^2 + **σ🛡️**^2)
+
+#### Narrative Interpretation:
+
+Narratively, this represents how effective the weapon is against the creature’s defenses. If the attack parameter is significantly higher than the damage resistance, the weapon deals substantial damage. Conversely, if the damage resistance is much higher than the attack parameter, the weapon’s impact is minimal.
+
+Even if mean of the impact is minimal there is always a chance for a critical hit as normal distribution random values are not limited within a certain range.
