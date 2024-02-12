@@ -21,7 +21,7 @@ namespace ZeroExpectationRolePlayingSystem
         /// <returns>This role playing system with modified value.</returns>
         public RolePlayingSystem WithCriticalSuccessProbability(double probability)
         {
-            return WithCriticalSuccessOffset(MathHelper.ArgumentFromProbability(probability));
+            return WithCriticalSuccessOffset(NDice.EvaluateRoll(probability));
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace ZeroExpectationRolePlayingSystem
 
         public RolePlayingSystem WithCriticalFailureProbability(double probability)
         {
-            return WithCriticalFailureOffset(MathHelper.ArgumentFromProbability(1.0 - probability));
+            return WithCriticalFailureOffset(NDice.EvaluateRoll(1.0 - probability));
         }
 
         public RolePlayingSystem WithCriticalFailureOffset(double offset)
@@ -67,17 +67,17 @@ namespace ZeroExpectationRolePlayingSystem
 
         public double GetSuccessProbability(double check)
         {
-            return MathHelper.SuccessProbability(check);
+            return NDice.EvaluateProbability(check);
         }
 
         public double GetCriticalSuccessProbability(double check)
         {
-            return MathHelper.SuccessProbability(check + _criticalSuccess);
+            return NDice.EvaluateProbability(check + _criticalSuccess);
         }
 
         public double GetCriticalFailureProbability(double check)
         {
-            return 1.0-MathHelper.SuccessProbability(check + _criticalFailure);
+            return 1.0- NDice.EvaluateProbability(check + _criticalFailure);
         }
     }
 }

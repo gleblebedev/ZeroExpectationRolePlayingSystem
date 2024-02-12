@@ -72,11 +72,15 @@ The standard normal distribution is a special case where (μ = 0) and (σ = 1). 
 
 Simplified normal distribution is used for skill checks and the full formula is used to calculate outcome, like amount of damage.
 
-# Normal Distributed Dice
+# Normal Distributed Dice or NDice
 
-In the following text let's assume that dice we roll is a magical device that produce a random value with normal distribution. The result of such dice roll could be any number and isn't discrete as with real world dice.
+In the following text let's assume that dice we roll is a magical device that produce a random value with normal distribution. The result of such dice roll could be any number and isn't discrete as with real world dice. Let's call such dice a **NDice**.
 
-# Dice rolls and Skill checks
+### Visual representation:
+
+There are several ways to display the NDice in 
+
+# NDice rolls and Skill checks
 
 Let’s break down how the RPG skill check works step by step:
 
@@ -99,13 +103,13 @@ Let’s denote the skill level as (**S**).
 
 ### Calculating the Resulting Value:
 
-We calculate the resulting value by subtracting the skill level from the random value and then adding the difficulty: ```Check = R - S + D```
+We calculate the resulting value by subtracting the skill level from the random value and then adding the difficulty: ```R - S + D ≤ 0```
 
 ### Success or Failure:
 
-If the resulting value is less than or equal to zero ((R - S + D \leq 0)), the skill check is a success. The character successfully accomplishes the task.
+If the resulting value is less than or equal to zero (R - S + D ≤ 0), the skill check is a success. The character successfully accomplishes the task.
 
-Otherwise, if the resulting value is greater than zero ((R - S + D > 0)), the skill check fails. The character does not succeed in the task.
+Otherwise, if the resulting value is greater than zero (R - S + D > 0), the skill check fails. The character does not succeed in the task.
 
 In summary, the skill check combines randomness, the character’s skill level, and the difficulty of the task to determine whether the character succeeds or fails. It adds an element of chance and strategy to the game, making it more engaging for players.
 
@@ -114,15 +118,15 @@ In summary, the skill check combines randomness, the character’s skill level, 
 In a threshold-based system, we define specific thresholds for success and failure.
 For example:
 
-If the resulting value ((R - S + D)) is below a certain threshold (e.g., 0), it’s a regular success.
+If the resulting value (R - S + D) is below a certain threshold (e.g., 0), it’s a regular success.
 
-If the resulting value is above another threshold (e.g., -3.0), it’s a critical success. Remember, negative values are treated as success. The threshold -3.0 is equivalent to 0.135% success rate or once in 741 dice rolls.
+If the resulting value is above another threshold (e.g., -3.0), it’s a critical success. Remember, negative values are treated as success. The threshold -3.0 is equivalent to 0.135% success rate or once in 741 NDice rolls.
 
 Conversely, if the resulting value is less than a failure threshold (e.g., 3.0), it’s a critical failure.
 
 Critical successes and failures occur when the result significantly deviates from the norm. These thresholds can be adjusted based on game balance and desired gameplay.
 
-### Sample dice rolls.
+### Sample NDice rolls.
 
 Let's look at a roleplaying system with 3.0 as a threshold value for a critical values.
 
@@ -180,7 +184,7 @@ Let’s analyze the skill check for the amateur lock picker picking a hard lock.
 - The lock’s difficulty is close to very unfavorable (D = 0.7).
 - A higher difficulty value indicates a tougher lock to pick. Difficulty equal to 0.7 gives a player with skill level equal to 0.0 a chance to open the lock 24.2% success rate, or roughly 1 of 4 attempts.
 
-#### Dice roll and outcome.
+#### NDice roll and outcome.
 
 A new random value is generated. Let’s assume it’s **R** = 0.5.
 
@@ -196,7 +200,7 @@ For [ **S-D** = 0.45 - 0.7 = -0.25 ] chances of a particular outcome are:
 |--|--|--|--|--|--|--|
 | -0.25 | 0.058% | 1 of 1733 | 40.129% | 1 of 2  | 0.298% | 1 of 335 |
 
-# Attack, Defense and dice rolls
+# Attack, Defense and NDice rolls
 
 Let’s explore how to calculate damage in hit points when the attack and defense parameters follow random distributions.
 

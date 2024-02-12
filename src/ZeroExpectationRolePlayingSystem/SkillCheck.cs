@@ -39,7 +39,7 @@ namespace ZeroExpectationRolePlayingSystem
         }
         public double SuccessProbability
         {
-            get { return MathHelper.SuccessProbability(_value); }
+            get { return NDice.EvaluateProbability(_value); }
         }
     }
 }

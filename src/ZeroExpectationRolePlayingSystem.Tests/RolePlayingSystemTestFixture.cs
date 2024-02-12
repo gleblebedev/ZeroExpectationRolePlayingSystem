@@ -131,7 +131,7 @@ namespace ZeroExpectationRolePlayingSystem
             foreach (var tuple in levels)
             {
                 var probability = tuple.Item2*0.01;
-                var successProbability = MathHelper.SuccessProbability(MathHelper.ArgumentFromProbability(probability)+boost);
+                var successProbability = NDice.EvaluateProbability(NDice.EvaluateRoll(probability)+boost);
                 Console.WriteLine("{0}:\t{1:0.00}% (from {2:0.00}% to {3:0.00}%)", tuple.Item1, (successProbability-probability)*100, tuple.Item2, successProbability*100);
             }
         }
@@ -142,7 +142,7 @@ namespace ZeroExpectationRolePlayingSystem
             var rpg = new RolePlayingSystem().WithCriticalSuccessProbability(0.02).WithCriticalFailureProbability(0.02);
             foreach (var tuple in levels)
             {
-                var probability = MathHelper.ArgumentFromProbability(tuple.Item2 * 0.01);
+                var probability = NDice.EvaluateRoll(tuple.Item2 * 0.01);
                 var successProbability = rpg.GetCriticalSuccessProbability(probability);
                 var failureProbability = rpg.GetCriticalFailureProbability(probability);
                 Console.WriteLine("{0}:\tsuccess chance: {1:0.00}%\tcrit success: {2:0.00}%\tcrit failure: {3:0.00}%)", tuple.Item1, tuple.Item2, successProbability * 100, failureProbability * 100);
