@@ -7,9 +7,9 @@ namespace ZeroExpectationRolePlayingSystem
     /// NDice is a magical dice that produce values with a normal distribution of probability.
     /// https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
     /// </summary>
-    public class NDice
+    public struct NDice
     {
-        private static readonly Random _randomGenerator = new Random();
+        private static readonly Random RandomGenerator = new Random();
 
         // Second result from the Box–Muller transform.
         private double? _generatedValue;
@@ -32,7 +32,6 @@ namespace ZeroExpectationRolePlayingSystem
         /// <summary>
         /// Construct dice.
         /// </summary>
-        /// <param name="randomNumberGenerator">Random number generator.</param>
         /// <param name="mean">Mean (mu) of the normal distribution.</param>
         /// <param name="stdDev">Standard definition (sigma) of the normal distribution.</param>
         public NDice(double mean = 0.0f, double stdDev = 1.0f): this(DefaultRandomGenerator, mean, stdDev)
@@ -50,7 +49,18 @@ namespace ZeroExpectationRolePlayingSystem
             _randomNumberGenerator = randomNumberGenerator;
             _mean = mean;
             _stdDev = stdDev;
+            _generatedValue = null;
         }
+
+        /// <summary>
+        /// Mean (mu) of the normal distribution.
+        /// </summary>
+        public double Mean => _mean;
+
+        /// <summary>
+        /// Standard definition (sigma) of the normal distribution.
+        /// </summary>
+        public double StdDev => _stdDev;
 
         /// <summary>
         /// Default random generator function.
@@ -58,7 +68,7 @@ namespace ZeroExpectationRolePlayingSystem
         /// <returns>Randomly generated value.</returns>
         public static double DefaultRandomGenerator()
         {
-            return _randomGenerator.NextDouble();
+            return RandomGenerator.NextDouble();
         }
 
         /// <summary>
@@ -136,14 +146,71 @@ namespace ZeroExpectationRolePlayingSystem
             return z * stdDev + mean;
         }
 
+        /// <summary>
+        /// Overload the multiplication operator *.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns>Result of addition.</returns>
+        public static NDice operator *(NDice left, NDice right)
+        {
+            var leftSigma2 = left._stdDev * left._stdDev;
+            var rightSigma2 = right._stdDev * right._stdDev;
+            return new NDice(left._randomNumberGenerator,
+                (leftSigma2 + right._mean + rightSigma2 + left._mean)/(leftSigma2+rightSigma2),
+                1.0/(1.0/leftSigma2 + 1.0/rightSigma2));
+        }
+
+        /// <summary>
+        /// Overload the addition operator +.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns>Result of addition.</returns>
         public static NDice operator +(NDice left, NDice right)
         {
             return new NDice(left._randomNumberGenerator, left._mean + right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
         }
 
+        /// <summary>
+        /// Overload the subtraction operator -.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns>Result of subtraction.</returns>
         public static NDice operator -(NDice left, NDice right)
         {
             return new NDice(left._randomNumberGenerator, left._mean - right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
+        }
+
+        /// <summary>
+        /// Overload the addition operator +.
+        /// Shifts distribution mean value.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand, applied to mean value.</param>
+        /// <returns>Result of addition.</returns>
+        public static NDice operator +(NDice left, double right)
+        {
+            return new NDice(left._randomNumberGenerator, left._mean + right, left._stdDev);
+        }
+
+        /// <summary>
+        /// Overload the subtraction operator -.
+        /// Shifts distribution mean value.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand, applied to mean value.</param>
+        /// <returns>Result of subtraction.</returns>
+        public static NDice operator -(NDice left, double right)
+        {
+            return new NDice(left._randomNumberGenerator, left._mean - right, left._stdDev);
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"\u03BC={_mean}, \u03C3={_stdDev}";
         }
     }
 }

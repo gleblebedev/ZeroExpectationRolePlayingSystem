@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Channels;
 using NUnit.Framework;
 
 namespace ZeroExpectationRolePlayingSystem
@@ -143,6 +144,64 @@ namespace ZeroExpectationRolePlayingSystem
             var probability = NDice.EvaluateProbability(skillLevel);
 
             Assert.AreEqual(expectedProbability, probability, 1e-6);
+        }
+
+        [Test]
+        public void CalculateBalance()
+        {
+            var creatueA = new SampleCreature()
+            {
+                HitPoints = 100,
+                Attack = new NDice(20.0, 2.0),
+                Defence = new NDice(10.0, 2.0),
+            };
+            var creatueB = new SampleCreature()
+            {
+                HitPoints = 40,
+                Attack = new NDice(20.0, 2.0),
+                Defence = new NDice(10.0, 2.0),
+            };
+
+            Console.WriteLine($"When attacking monster {creatueB}");
+            Console.WriteLine($"Chance to win in {creatueA}: {GetWinChance(creatueA, creatueB)}");
+            {
+                var creatueAVariation = new SampleCreature()
+                {
+                    HitPoints = creatueA.HitPoints - 30,
+                    Attack = creatueA.Attack + 1,
+                    Defence = creatueA.Defence,
+                };
+                Console.WriteLine($"Chance to win in {creatueAVariation}: {GetWinChance(creatueAVariation, creatueB)}");
+            }
+            {
+                var creatueAVariation = new SampleCreature()
+                {
+                    HitPoints = creatueA.HitPoints - 30,
+                    Attack = creatueA.Attack,
+                    Defence = creatueA.Defence+3,
+                };
+                Console.WriteLine($"Chance to win in {creatueAVariation}: {GetWinChance(creatueAVariation, creatueB)}");
+            }
+        }
+
+        private double GetWinChance(SampleCreature attacker, SampleCreature defender)
+        {
+            var maxNumberOfHits = (int)Math.Ceiling(attacker.HitPoints / (defender.Attack.Mean - attacker.Defence.Mean));
+            var expectedDamage = attacker.Attack - defender.Defence;
+            var howMuchDamageRequired = defender.HitPoints / maxNumberOfHits;
+            return Math.Pow(1.0 - expectedDamage.EvaluateProbability(howMuchDamageRequired), maxNumberOfHits);
+        }
+
+        class SampleCreature
+        {
+            public double HitPoints { get; set; }
+            public NDice Attack { get; set; }
+            public NDice Defence { get; set; }
+
+            public override string ToString()
+            {
+                return $@"HP:{HitPoints}, A:{Attack}, D:{Defence}";
+            }
         }
     }
 }
