@@ -17,8 +17,9 @@ namespace ZeroExpectationRolePlayingSystem
         [TestCase(1.0)]
         public void Roll(double percentage)
         {
-            var dice = new NDice(new Random(0).NextDouble);
-            var values = Enumerable.Range(0, 10000).Select(_ => dice.Roll()).OrderBy(_ => (double)_).ToList();
+            var rpg = new RolePlayingSystem(new Random(0).NextDouble);
+            var dice = new NDice(0.0, 1.0);
+            var values = Enumerable.Range(0, 10000).Select(_ => rpg.Roll(dice)).OrderBy(_ => (double)_).ToList();
             var samples = (double)values.Count;
             var sampleIndex = (int)((values.Count - 1) * percentage);
             var sample = values[sampleIndex];
@@ -37,8 +38,9 @@ namespace ZeroExpectationRolePlayingSystem
         {
             double mu = 2.0;
             double sigma = 3.0;
-            var dice = new NDice(new Random(0).NextDouble, mu, sigma);
-            var values = Enumerable.Range(0, 10000).Select(_ => dice.Roll()).OrderBy(_ => (double)_).ToList();
+            var rpg = new RolePlayingSystem(new Random(0).NextDouble);
+            var dice = new NDice(mu, sigma);
+            var values = Enumerable.Range(0, 10000).Select(_ => rpg.Roll(dice)).OrderBy(_ => (double)_).ToList();
             var samples = (double)values.Count;
             var sampleIndex = (int)((values.Count - 1) * percentage);
             var sample = values[sampleIndex];
@@ -49,12 +51,15 @@ namespace ZeroExpectationRolePlayingSystem
         [Test]
         public void ValidateAddDice()
         {
-            var diceX = new NDice(new Random(0).NextDouble, 2.0, 3.0);
-            var diceY = new NDice(new Random(1).NextDouble, 1.0, 1.0);
+            var rpg1 = new RolePlayingSystem(new Random(0).NextDouble);
+            var rpg2 = new RolePlayingSystem(new Random(1).NextDouble);
+
+            var diceX = new NDice(2.0, 3.0);
+            var diceY = new NDice(1.0, 1.0);
 
             var diceZ = diceX + diceY;
 
-            var values = Enumerable.Range(0, 10000).Select(_ => diceX.Roll() + diceY.Roll()).OrderBy(_ => _).ToList();
+            var values = Enumerable.Range(0, 10000).Select(_ => rpg1.Roll(diceX) + rpg2.Roll(diceY)).OrderBy(_ => _).ToList();
             var samples = (double)values.Count;
             for (double percentage = 0.1; percentage < 1.0; percentage += 0.1)
             {
@@ -68,12 +73,16 @@ namespace ZeroExpectationRolePlayingSystem
         [Test]
         public void ValidateSubtractDice()
         {
-            var diceX = new NDice(new Random(0).NextDouble, 2.0, 3.0);
-            var diceY = new NDice(new Random(1).NextDouble, 1.0, 1.0);
+
+            var rpg1 = new RolePlayingSystem(new Random(0).NextDouble);
+            var rpg2 = new RolePlayingSystem(new Random(1).NextDouble);
+
+            var diceX = new NDice( 2.0, 3.0);
+            var diceY = new NDice(1.0, 1.0);
 
             var diceZ = diceX - diceY;
 
-            var values = Enumerable.Range(0, 10000).Select(_ => diceX.Roll() - diceY.Roll()).OrderBy(_ => _).ToList();
+            var values = Enumerable.Range(0, 10000).Select(_ => rpg1.Roll(diceX) - rpg2.Roll(diceY)).OrderBy(_ => _).ToList();
             var samples = (double)values.Count;
             for (double percentage = 0.1; percentage < 1.0; percentage += 0.1)
             {
@@ -92,7 +101,7 @@ namespace ZeroExpectationRolePlayingSystem
         [TestCase(0.6)]
         [TestCase(0.9)]
         [TestCase(0.999)]
-        public void EvaluateProbability(double probability)
+        public void EvaluateEvaluateRollMatchesProbability(double probability)
         {
             var argumentFromProbability = NDice.EvaluateRoll(probability);
             var p = NDice.EvaluateProbability(argumentFromProbability);
@@ -153,54 +162,79 @@ namespace ZeroExpectationRolePlayingSystem
             {
                 HitPoints = 100,
                 Attack = new NDice(20.0, 2.0),
-                Defence = new NDice(10.0, 2.0),
+                Defense = new NDice(10.0, 2.0),
             };
             var creatueB = new SampleCreature()
             {
-                HitPoints = 40,
+                HitPoints = 90,
                 Attack = new NDice(20.0, 2.0),
-                Defence = new NDice(10.0, 2.0),
+                Defense = new NDice(10.0, 2.0),
             };
 
-            Console.WriteLine($"When attacking monster {creatueB}");
-            Console.WriteLine($"Chance to win in {creatueA}: {GetWinChance(creatueA, creatueB)}");
+            Console.WriteLine($"Character stats: {creatueA}");
+            Console.WriteLine($"Monster stats: {creatueB}");
+            Console.WriteLine($"Chance to win: {GetWinChance(creatueA, creatueB)}");
             {
-                var creatueAVariation = new SampleCreature()
-                {
-                    HitPoints = creatueA.HitPoints - 30,
-                    Attack = creatueA.Attack + 1,
-                    Defence = creatueA.Defence,
-                };
-                Console.WriteLine($"Chance to win in {creatueAVariation}: {GetWinChance(creatueAVariation, creatueB)}");
+                int levels = 7;
+                (var build, var chance) = GetOptimalBuild(creatueA, creatueB, levels);
+                Console.WriteLine($"Best build +{levels}: {build}, chance {chance}");
             }
+        }
+
+        private (SampleCreature, double) GetOptimalBuild(SampleCreature attacker, SampleCreature defender, int levels)
+        {
+            SampleCreature bestBuild = attacker;
+            var bestChance = -1.0;
+            for (int attackLevels = 0; attackLevels <= levels; attackLevels++)
             {
-                var creatueAVariation = new SampleCreature()
+                var attackerClone = new SampleCreature();
+                int levelsLeft = levels - attackLevels;
+                for (int defendLevels = 0; defendLevels <= levelsLeft; defendLevels++)
                 {
-                    HitPoints = creatueA.HitPoints - 30,
-                    Attack = creatueA.Attack,
-                    Defence = creatueA.Defence+3,
-                };
-                Console.WriteLine($"Chance to win in {creatueAVariation}: {GetWinChance(creatueAVariation, creatueB)}");
+                    int healthLevels = levelsLeft - defendLevels;
+
+                    attackerClone.HitPoints = attacker.HitPoints + healthLevels*30;
+                    attackerClone.Attack = attacker.Attack + attackLevels;
+                    attackerClone.Defense = attacker.Defense + defendLevels;
+
+                    var chance = GetWinChance(attackerClone, defender);
+                    if (chance > bestChance)
+                    {
+                        bestBuild = attackerClone;
+                        bestChance = chance;
+                    }
+                }
             }
+
+            return (bestBuild, bestChance);
         }
 
         private double GetWinChance(SampleCreature attacker, SampleCreature defender)
         {
-            var maxNumberOfHits = (int)Math.Ceiling(attacker.HitPoints / (defender.Attack.Mean - attacker.Defence.Mean));
-            var expectedDamage = attacker.Attack - defender.Defence;
+            var damageOnAttackerMean = GetDamageMean(defender.Attack, attacker.Defense);
+            var maxNumberOfHits = (int)Math.Ceiling(attacker.HitPoints / damageOnAttackerMean);
+            var expectedDamage = attacker.Attack - defender.Defense;
             var howMuchDamageRequired = defender.HitPoints / maxNumberOfHits;
             return Math.Pow(1.0 - expectedDamage.EvaluateProbability(howMuchDamageRequired), maxNumberOfHits);
+        }
+
+        private double GetDamageMean(NDice attack, NDice defence)
+        {
+            var damageOnAttacker = attack - defence;
+            var thresholdProbability = damageOnAttacker.EvaluateProbability(0.0);
+            var adjustedMeanProbability = 0.5 + thresholdProbability * 0.5;
+            return damageOnAttacker.EvaluateRoll(adjustedMeanProbability);
         }
 
         class SampleCreature
         {
             public double HitPoints { get; set; }
             public NDice Attack { get; set; }
-            public NDice Defence { get; set; }
+            public NDice Defense { get; set; }
 
             public override string ToString()
             {
-                return $@"HP:{HitPoints}, A:{Attack}, D:{Defence}";
+                return $@"HP:{HitPoints}, A:{Attack}, D:{Defense}";
             }
         }
     }

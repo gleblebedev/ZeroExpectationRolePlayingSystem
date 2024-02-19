@@ -4,6 +4,37 @@ namespace ZeroExpectationRolePlayingSystem
 {
     public class RolePlayingSystem
     {
+        private static readonly Random RandomGenerator = new Random();
+
+        /// <summary>
+        /// Random number generator with linear distribution in range of [0..1].
+        /// </summary>
+        private readonly Func<double> _randomNumberGenerator;
+
+        /// <summary>
+        /// Construct role playing system.
+        /// </summary>
+        public RolePlayingSystem(): this(DefaultRandomGenerator)
+        {
+        }
+
+        /// <summary>
+        /// Construct role playing system.
+        /// </summary>
+        public RolePlayingSystem(Func<double> randomNumberGenerator)
+        {
+            _randomNumberGenerator = randomNumberGenerator;
+        }
+
+        /// <summary>
+        /// Default random generator function.
+        /// </summary>
+        /// <returns>Randomly generated value.</returns>
+        public static double DefaultRandomGenerator()
+        {
+            return RandomGenerator.NextDouble();
+        }
+
         /// <summary>
         /// Threshold for critical success.
         /// </summary>
@@ -78,6 +109,16 @@ namespace ZeroExpectationRolePlayingSystem
         public double GetCriticalFailureProbability(double check)
         {
             return 1.0- NDice.EvaluateProbability(check + _criticalFailure);
+        }
+
+        /// <summary>
+        /// Roll the dice.
+        /// </summary>
+        /// <param name="dice">Dice to roll.</param>
+        /// <returns>Roll outcome.</returns>
+        public double Roll(NDice dice)
+        {
+            return dice.Roll(_randomNumberGenerator);
         }
     }
 }

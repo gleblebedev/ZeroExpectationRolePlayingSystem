@@ -9,15 +9,8 @@ namespace ZeroExpectationRolePlayingSystem
     /// </summary>
     public struct NDice
     {
-        private static readonly Random RandomGenerator = new Random();
-
         // Second result from the Box–Muller transform.
         private double? _generatedValue;
-
-        /// <summary>
-        /// Random number generator with linear distribution in range of [0..1].
-        /// </summary>
-        private readonly Func<double> _randomNumberGenerator;
 
         /// <summary>
         /// Normal distribution mean (mu).
@@ -29,24 +22,14 @@ namespace ZeroExpectationRolePlayingSystem
         /// </summary>
         private readonly double _stdDev;
 
-        /// <summary>
-        /// Construct dice.
-        /// </summary>
-        /// <param name="mean">Mean (mu) of the normal distribution.</param>
-        /// <param name="stdDev">Standard definition (sigma) of the normal distribution.</param>
-        public NDice(double mean = 0.0f, double stdDev = 1.0f): this(DefaultRandomGenerator, mean, stdDev)
-        {
-        }
 
         /// <summary>
         /// Construct dice.
         /// </summary>
-        /// <param name="randomNumberGenerator">Random number generator.</param>
         /// <param name="mean">Mean (mu) of the normal distribution.</param>
         /// <param name="stdDev">Standard definition (sigma) of the normal distribution.</param>
-        public NDice(Func<double> randomNumberGenerator, double mean = 0.0f, double stdDev = 1.0f)
+        public NDice(double mean = 0.0f, double stdDev = 1.0f)
         {
-            _randomNumberGenerator = randomNumberGenerator;
             _mean = mean;
             _stdDev = stdDev;
             _generatedValue = null;
@@ -63,20 +46,12 @@ namespace ZeroExpectationRolePlayingSystem
         public double StdDev => _stdDev;
 
         /// <summary>
-        /// Default random generator function.
-        /// </summary>
-        /// <returns>Randomly generated value.</returns>
-        public static double DefaultRandomGenerator()
-        {
-            return RandomGenerator.NextDouble();
-        }
-
-        /// <summary>
         /// Roll dice.
         /// Random number is generated via Box–Muller transform.
         /// </summary>
+        /// <param name="randomNumberGenerator">Random number generator.</param>
         /// <returns>Dice roll result.</returns>
-        public double Roll()
+        public double Roll(Func<double> randomNumberGenerator)
         {
             if (_generatedValue.HasValue)
             {
@@ -89,8 +64,8 @@ namespace ZeroExpectationRolePlayingSystem
 
             do
             {
-                u1 = _randomNumberGenerator();
-                u2 = 6.283185307179586476925286766559 * _randomNumberGenerator();
+                u1 = randomNumberGenerator();
+                u2 = 6.283185307179586476925286766559 * randomNumberGenerator();
             } while (u1 <= double.Epsilon);
 
             var u1Log = _stdDev * Math.Sqrt(-2.0 * Math.Log(u1));
@@ -156,7 +131,7 @@ namespace ZeroExpectationRolePlayingSystem
         {
             var leftSigma2 = left._stdDev * left._stdDev;
             var rightSigma2 = right._stdDev * right._stdDev;
-            return new NDice(left._randomNumberGenerator,
+            return new NDice(
                 (leftSigma2 + right._mean + rightSigma2 + left._mean)/(leftSigma2+rightSigma2),
                 1.0/(1.0/leftSigma2 + 1.0/rightSigma2));
         }
@@ -169,7 +144,7 @@ namespace ZeroExpectationRolePlayingSystem
         /// <returns>Result of addition.</returns>
         public static NDice operator +(NDice left, NDice right)
         {
-            return new NDice(left._randomNumberGenerator, left._mean + right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
+            return new NDice(left._mean + right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
         }
 
         /// <summary>
@@ -180,7 +155,7 @@ namespace ZeroExpectationRolePlayingSystem
         /// <returns>Result of subtraction.</returns>
         public static NDice operator -(NDice left, NDice right)
         {
-            return new NDice(left._randomNumberGenerator, left._mean - right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
+            return new NDice(left._mean - right._mean, Math.Sqrt(left._stdDev * left._stdDev + right._stdDev * right._stdDev));
         }
 
         /// <summary>
@@ -192,7 +167,7 @@ namespace ZeroExpectationRolePlayingSystem
         /// <returns>Result of addition.</returns>
         public static NDice operator +(NDice left, double right)
         {
-            return new NDice(left._randomNumberGenerator, left._mean + right, left._stdDev);
+            return new NDice(left._mean + right, left._stdDev);
         }
 
         /// <summary>
@@ -204,7 +179,7 @@ namespace ZeroExpectationRolePlayingSystem
         /// <returns>Result of subtraction.</returns>
         public static NDice operator -(NDice left, double right)
         {
-            return new NDice(left._randomNumberGenerator, left._mean - right, left._stdDev);
+            return new NDice(left._mean - right, left._stdDev);
         }
 
         /// <inheritdoc/>
